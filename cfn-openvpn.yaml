@@ -59,7 +59,7 @@ Parameters:
 
   EasyRSAREQCNAlgorithm:
     Type: 'String'
-    Default: rsa
+    Default: ec
     AllowedValues: 
       - rsa
       - ec
@@ -421,7 +421,7 @@ Resources:
                 port ${OpenVPNPort}
                 proto ${OpenVPNProtocol}
                 dev tun
-                server 172.16.0.0 255.255.252.0
+                server 172.22.0.0 255.255.255.0
                 push "redirect-gateway def1"
                 ca /opt/easy-rsa/pki/ca.crt
                 cert /opt/easy-rsa/pki/issued/server.crt
@@ -454,7 +454,7 @@ Resources:
             02_configure_server_sysctl_reload:
               command: "sysctl -p"
             03_configure_server_iptables_nat:
-              command: "iptables -t nat -A POSTROUTING -s 172.16.0.0/22 -o eth0 -j MASQUERADE"
+              command: "iptables -t nat -A POSTROUTING -s 172.22.0.0/24 -o eth0 -j MASQUERADE"
             04_configure_server_update_config:
               test: "test -e /opt/openvpn/server.conf"
               command: "cp -f /opt/openvpn/server.conf /etc/openvpn/server/server.conf"
